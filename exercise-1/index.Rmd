@@ -1,0 +1,23 @@
+---
+title: "Participation 6 - Data Visualization using ggplot2"
+author: "Emily Zhang"
+date: "5/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("exercise.R")
+```
+
+## Plots of different things
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(carat_by_price)
+
+plot(price_by_carat_color)
+```
+
+

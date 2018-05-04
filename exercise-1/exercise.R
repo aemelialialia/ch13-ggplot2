@@ -3,6 +3,7 @@
 # Install and load the `ggplot2` package
 # You will also want to load `dplyr`
 install.packages("ggplot2")
+install.packages("dplyr")
 library(dplyr)
 library(ggplot2)
 
@@ -28,6 +29,13 @@ ggplot(data = diamonds_sample)
 # Draw a scatter plot (with point geometry) with for the `diamonds_sample` set, 
 # with the `carat` mapped to the x-position and `price` mapped to the y-position.
 ggplot(data = diamonds_sample) + geom_point(mapping = aes(x = carat, y = price))
+ggplot(data = diamonds_sample) +
+  geom_point(mapping = aes(x = carat, y = price), color = 'Purple') +
+  labs(
+    title = "Prices by Carat",
+    x = "Carat",
+    y = "($) Prices"
+  )
 
 # Draw the same plot as above, but color each of the points based on their 
 # clarity.
@@ -36,52 +44,86 @@ ggplot(data = diamonds_sample) +
 
 # Draw the same plot as above, but for the entire `diamonds` data set. Note this
 # may take a few seconds to generate.
-
+ggplot(data = diamonds) + 
+  geom_point(mapping = aes(x = carat, y = price, color = clarity)) +
+  labs(
+    title = "Prices by Carat indicated Clarity",
+    x = "Carat",
+    y = "($) Price"
+  )
 
 # Draw another scatter plot for `diamonds_sample` of price (y) by carat (x),
 # but with all of the dots colored "blue".
 # Hint: you'll need to set the color channel, not map a value to it!
-
+ggplot(data = diamonds_sample) +
+  geom_point(mapping =  aes(x = carat, y = price), color = 'BLUE')
 
 # Draw a scatter plot for `diamonds_sample` of `price` by `carat`, where each
 # point has an aesthetic _shape_ based on the diamond's `cut`.
-
+ggplot(data = diamonds_sample) +
+  geom_point(mapping = aes(x = carat, y = price, shape = cut))
 
 # Draw a scatter plot for `diamonds_sample` of *`cut`* by `carat`, where each
 # point has an aesthetic _size_ based on the diamond's *`price`*
-
+ggplot(data = diamonds_sample) +
+  geom_point(mapping = aes(x = carat, y = cut, size = price))
 
 # Try coloring the above plot based on the diamond's price!
-
+ggplot(data = diamonds_sample) +
+  geom_point(mapping = aes(x = carat, y = cut, size = price, color = price))
 
 # Draw a line plot (with line geometry) for `diamonds_sample`. The x-position 
 # should be mapped to carat, y-position to price, and color to cut.
-
+ggplot(data = diamonds_sample) +
+  geom_line(mapping = aes(x = carat, y = cut, color = clarity)) +
+  labs(
+    title = "Clarity by Carat Plot with Color arranged by Cut",
+    x = "Carat",
+    y = "Cut"
+  )
 
 # That's kind of messy. Try using `smooth` geometry instead.
-
+ggplot(data = diamonds_sample) +
+  geom_smooth(mapping = aes(x = carat, y = price, color = cut), se = FALSE) +
+  labs(
+    title = "Price by Carat with Colors to Cut",
+    x = "Carat",
+    y = "Price"
+  )
 
 # Draw a plot with bar geometry (a bar chart), mapping the diamond's `cut` to 
 # the x-axis
-
+ggplot(data = diamonds_sample) +
+  geom_bar(mapping = aes(x = cut, fill = clarity)) +
+  labs(
+    title = "Number of Each Cut"
+  )
 
 # Add an aesthetic property that will _fill_ each bar geometry based on the 
 # `clarity` of the diamonds. 
 # What kind of chart do you get?
-
+ggplot(data = diamonds_sample) +
+  geom_bar(mapping = aes(x = cut, fill = clarity))
 
 # Draw a histogram (using histogram geometry) of diamond prices.
 # Try mapping each bar based on clarity as well!
-
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = price, fill = clarity))
 
 # (For a more traditional "bell-curve", make a histogram of diamond `depth`)
-
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = depth, fill = clarity)) +
+  labs(
+    title = "Depth of Diamons Colored by Clarity"
+  )
 
 
 # Draw a plot of the `diamonds_sample` data (price by carat), with both points 
 # for each diamond AND smoothed lines for each cut (hint: in a separate color)
 # Give the points an `alpha` (transparency) of 0.3 to make the plot look nicer
-
+ggplot(data = diamonds_sample) +
+  geom_point(mapping = aes(x = carat, y = price, color = cut), alpha = 0.3) +
+  geom_smooth(mapping = aes(x = carat, y = price, color = cut), se = FALSE)
 
 ## Bonus
 # Draw a bar chart of average diamond prices by clarity, and include "error bars"
@@ -89,6 +131,9 @@ ggplot(data = diamonds_sample) +
 #
 # You can calculate standard error as the _standard deviation_ divided by the 
 # square root of the number of measurements (prices)
+clarity_summar <- diamonds %>% 
+  group_by(clarity) %>% 
+  summarise(mean = mean(price), sd = sd(price), se = sd/sqrt(length(price)))
 
 # Start by creating a data frame `clarity_summary` that includes summarized data 
 # for each clarity group. Your summary data should include the mean price and the
